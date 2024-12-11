@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>Banco do Django</h1>
+
+    <div class="container_input">
+        <div>
+            <legend>Digite seu CPF:</legend>
+            <input type="text">
+        </div>
+        <div class="senha_container">
+            <legend>Digite sua Senha:</legend>
+            <input type="password">
+        </div>
+    </div>
+
+    <div class="container_button">
+        <button id="cadastro">Cadastrar-se</button>
+        
+        <button>Fazer login</button>
+    </div>
+</body>
+</html>
