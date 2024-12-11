@@ -1,12 +1,24 @@
 from atexit import register
 from django.contrib import admin
-from .models import Usuario
+from .models import Usuario, Genero, ChavePIX
 from django.contrib.auth.admin import UserAdmin
 
-class UsuarioAdmin(UserAdmin):
-    list_display = (
-        'id', 'email', 'username', 'is_staff'
-    )
+@admin.register(Usuario)
+class UsuarioAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'cpf', 'saldo', 'is_staff')  # Adicione 'cpf' aqui para ser exibido na lista
+    
 
 # Registre o modelo personalizado com o admin
-admin.site.register(Usuario, UsuarioAdmin)
+
+@admin.register(Genero)
+class GeneroAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'genero'
+    )
+
+@admin.register(ChavePIX)
+class ChavePIXAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'usuario', 'tipo', 'valor'
+    )
+
