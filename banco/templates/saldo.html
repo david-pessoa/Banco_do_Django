@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saldo</title>
+    <link rel="stylesheet" href="{% static 'css/saldo.css' %}">
+</head>
+<body>
+    <h1>Bem vindo, {{usuario.username}}</h1>
+
+    <h2>Seu saldo: R${{usuario.saldo}}</h2>
+
+    <table>
+        <tbody>
+            <tr class="row1">
+                <td class="col1">
+                    <button>Cadastrar Chave PIX</button>
+                </td>
+                <td class="col2">
+                    <button>Sacar</button>
+                </td>
+            </tr>
+            <tr class="row2">
+                <td class="col1">
+                    <button>Realizar PIX</button>
+                </td>
+                <td class="col2">
+                    <button>Depositar</button>
+                </td>
+                <td class="col3">
+                    <button>Histórico</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

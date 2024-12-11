@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'Josefin Sans';
+    src: url('../webfonts/josefin_sans/JosefinSans-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'AbeeZee';
+    src: url('../webfonts/abeezee/ABeeZee-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Jost';
+    src: url('../webfonts/jost/Jost-Medium.ttf') format('truetype');
+    font-weight: medium;
+    font-style: normal;
+}

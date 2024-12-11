@@ -14,6 +14,9 @@ class Usuario(AbstractUser):
     cpf = models.CharField("CPF", max_length=14, default="")
     saldo = models.DecimalField("Saldo", decimal_places=2, max_digits=10, validators=[MinValueValidator(0)], default=0)
 
+    def checa_senha(self, senha):
+        return self.password == senha
+
 class ChavePIX(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="usuario")
     TIPO_CHAVE_CHOICES = [

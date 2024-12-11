@@ -1,16 +1,4 @@
-@font-face {
-    font-family: 'Josefin Sans';
-    src: url('../webfonts/josefin_sans/JosefinSans-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'AbeeZee';
-    src: url('../webfonts/abeezee/ABeeZee-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
+@import url('fonts.css');
 
 body{
     background-color: #6877FF;
@@ -54,6 +42,7 @@ button{
     width: 320px;
     height: 80px;
     font-family: 'AbeeZee', Arial, Helvetica, sans-serif;
+    cursor: pointer;
 }
 
 #cadastro{

@@ -1,0 +1,23 @@
+@import url('fonts.css');
+
+.messages{
+    font-family: 'Jost', sans-serif;
+    font-weight: medium;
+    font-size: 20px;
+    color: #FFF;
+    margin-bottom: 10px;
+    width: 1000px;
+    text-align: center;
+}
+
+.messages > .alert.alert-error{
+    background-color: rgb(179, 5, 5);
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.messages > .alert.alert-success{
+    background-color: rgb(5, 142, 21);
+    padding-bottom: 10px;
+    padding-top: 10px;
+}

@@ -6,26 +6,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/alerts.css' %}">
 </head>
 <body>
     <h1>Banco do Django</h1>
+        {% if messages %}
+        <center>
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </center>
+        {% endif %}
 
-    <div class="container_input">
-        <div>
-            <legend>Digite seu CPF:</legend>
-            <input type="text">
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="container_input">
+            <div>
+                <legend>Digite seu CPF:</legend>
+                <input type="text" name="cpf">
+            </div>
+            <div class="senha_container">
+                <legend>Digite sua Senha:</legend>
+                <input type="password" name="senha">
+            </div>
         </div>
-        <div class="senha_container">
-            <legend>Digite sua Senha:</legend>
-            <input type="password">
-        </div>
-    </div>
 
-    <div class="container_button">
-        <button id="cadastro">Cadastrar-se</button>
-        
-        <button>Fazer login</button>
-    </div>
+        <div class="container_button">
+            <button type="button" id="cadastro">Cadastrar-se</button>
+            <button type="submit" id="login">Fazer login</button>
+        </div>
+    </form>
 </body>
 </html>
