@@ -30,10 +30,11 @@ class Login(View):
             usuario = Usuario.objects.get(cpf=cpf)
 
             if usuario is not None and usuario.is_active and usuario.checa_senha(senha):
+                login(request, usuario)
                 return HttpResponseRedirect(reverse('saldo', args=[usuario.pk]))
             else:
                 messages.error(request, "CPF ou senha incorretos!")
-        
+                
         except Exception as e:
             messages.error(request, "CPF ou senha incorretos!")
         
