@@ -1,4 +1,5 @@
 {% load static %}
+{% load money_field %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +12,7 @@
 <body>
     <h1>Bem vindo, {{usuario.username}}</h1>
 
-    <h2>Seu saldo: R${{usuario.saldo}}</h2>
+    <h2>Seu saldo: R${{ usuario.saldo|format_money }}</h2>
 
     <table>
         <tbody>
@@ -20,7 +21,7 @@
                     <button>Cadastrar Chave PIX</button>
                 </td>
                 <td class="col2">
-                    <button>Sacar</button>
+                    <button url>Sacar</button>
                 </td>
             </tr>
             <tr class="row2">

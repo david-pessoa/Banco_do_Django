@@ -29,6 +29,16 @@ button{
     cursor: pointer;
 }
 
+a{
+    background-color: #FDBA38;
+    font-size: 30px;
+    border: none;
+    width: 320px;
+    height: 80px;
+    font-family: 'AbeeZee', Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
 table{
     margin-left: 100px;
     border-spacing: 70px;
