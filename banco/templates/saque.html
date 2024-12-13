@@ -6,13 +6,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saque</title>
+    <link rel="stylesheet" href="{% static 'css/saque_deposito.css' %}">
+    <link rel="stylesheet" href="{% static 'css/alerts.css' %}">
 </head>
 <body>
     <h1>Digite o valor a ser sacado</h1>
+    {% if messages %}
+        <center>
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </center>
+        {% endif %}
+
     <form action="{% url 'saque' usuario.pk%}" method="post">
-        <div>
+        {% csrf_token %}
+        <div class="box_input">
             <h2>R$</h2>
-            <input type="text" name="saque">
+            <input type="number" name="saque">
         </div>
 
         <button type="submit">Sacar</button>

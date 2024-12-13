@@ -1,0 +1,36 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saque</title>
+    <link rel="stylesheet" href="{% static 'css/saque_deposito.css' %}">
+    <link rel="stylesheet" href="{% static 'css/alerts.css' %}">
+</head>
+<body>
+    <h1>Digite o valor a ser depositado</h1>
+    {% if messages %}
+        <center>
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </center>
+        {% endif %}
+
+    <form action="{% url 'deposito' usuario.pk%}" method="post">
+        {% csrf_token %}
+        <div class="box_input">
+            <h2>R$</h2>
+            <input type="number" name="deposito">
+        </div>
+
+        <button type="submit">Depositar</button>
+    </form>
+</body>
+</html>

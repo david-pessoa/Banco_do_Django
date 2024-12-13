@@ -1,11 +1,12 @@
-from banco import views as v
 from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('', Login.as_view(), name='login'),
-    path('cadastro', Cadastro.as_view(), name='cadastro'),
-    path('saldo/<int:usuario_id>', Saldo.as_view(), name='saldo'),
-    path('saque/<int:usuario_id>', Saque.as_view(), name='saque'),
+    path('', LoginView.as_view(), name='login'),
+    path('cadastro', CadastroView.as_view(), name='cadastro'),
+    path('saldo/<int:usuario_id>', SaldoView.as_view(), name='saldo'),
+    path('saque/<int:usuario_id>', SaqueView.as_view(), name='saque'),
+    path('deposito/<int:usuario_id>', DepositoView.as_view(), name='deposito'),
+    path('historico/<int:usuario_id>', HistoricoView.as_view(), name='historico'),
 
 ]

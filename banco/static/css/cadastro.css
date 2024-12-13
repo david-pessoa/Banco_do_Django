@@ -1,0 +1,70 @@
+@import url('fonts.css');
+
+body{
+    background-color: #6877FF;
+    text-align: center;
+}
+
+h1{
+    color: #FFF;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: bold;
+    font-size: 96px;
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
+legend{
+    font-size: 36px;
+    text-align: left;
+    font-family: 'AbeeZee', Arial, Helvetica, sans-serif;
+}
+
+button{
+    background-color: #FDBA38;
+    font-size: 30px;
+    border: none;
+    width: 320px;
+    height: 80px;
+    font-family: 'AbeeZee', Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
+input{
+    font-size: 40px;
+    font-family: 'Jost', sans-serif;
+    outline: none;
+    width: 395px;
+    height: 67px;
+    margin-top: 10px;
+}
+
+select{
+    font-size: 40px;
+    font-family: 'Jost', sans-serif;
+    outline: none;
+    width: 395px;
+    height: 72px;
+    margin-top: 10px;
+}
+
+form{
+    margin-left: 200px;
+}
+
+.row{
+    display: flex;
+    margin-top: 50px;
+}
+
+.box_left{
+    margin-right: 158px;
+}
+
+#row1{
+    margin-top: 0;
+}
+
+#last{
+    margin-left: 560px;
+}

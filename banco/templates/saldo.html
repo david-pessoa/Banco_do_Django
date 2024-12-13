@@ -10,7 +10,14 @@
     <link rel="stylesheet" href="{% static 'css/saldo.css' %}">
 </head>
 <body>
-    <h1>Bem vindo, {{usuario.username}}</h1>
+    
+    <div class="top">
+        <h1>Bem vindo, {{usuario.username}}</h1>
+        <form action="{% url 'saldo' usuario.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="exit">Sair</button>
+        </form>
+    </div>
 
     <h2>Seu saldo: R${{ usuario.saldo|format_money }}</h2>
 
@@ -37,7 +44,7 @@
                     </a>
                 </td>
                 <td class="col2">
-                    <a href="">
+                    <a href="{% url 'deposito' usuario.pk %}">
                         <button>Depositar</button>
                     </a>
                 </td>

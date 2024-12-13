@@ -1,14 +1,17 @@
+from multiprocessing import context
+from sqlite3 import SQLITE_CANTOPEN_CONVPATH
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import View
-from .models import Usuario
+from .models import Usuario, Genero
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from decimal import Decimal
 
-class Login(View):
+class LoginView(View):
     def get(self, request):
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse('saldo', args=[request.user.pk]))
@@ -41,7 +44,7 @@ class Login(View):
         return render(request, 'login.html')
 
 
-class Saldo(View):
+class SaldoView(LoginRequiredMixin, View):
     def get(self, request, usuario_id):
         if not request.user.is_authenticated:
             return HttpResponseRedirect(reverse('login'))
@@ -53,8 +56,13 @@ class Saldo(View):
         }
 
         return render(request, 'saldo.html', context)
+    
+    def post(self, request, usuario_id):
+        logout(request)
+        return HttpResponseRedirect(reverse('login'))
 
-class Saque(LoginRequiredMixin, View):
+
+class SaqueView(LoginRequiredMixin, View):
     def get(self, request, usuario_id):
         if not request.user.is_authenticated:
             return HttpResponseRedirect(reverse('login'))
@@ -70,7 +78,7 @@ class Saque(LoginRequiredMixin, View):
             return HttpResponseRedirect(reverse('login'))
         
         usuario = Usuario.objects.get(pk=usuario_id)
-        saque = request.POST.get("saque")
+        saque = Decimal(request.POST.get("saque"))
 
         context = {
             "usuario": usuario
@@ -89,7 +97,74 @@ class Saque(LoginRequiredMixin, View):
         
         return render(request, 'saldo.html', context)
 
-class Cadastro(View):
-    def get(self, request):
-        return render(request, 'cadastro.html')
+class DepositoView(LoginRequiredMixin, View):
+    def get(self, request, usuario_id):
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
+        
+        usuario = Usuario.objects.get(pk=usuario_id)
+        context = {
+            "usuario": usuario
+        }
+        return render(request, 'deposito.html', context)
+    
+    def post(self, request, usuario_id):
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
+        
+        usuario = Usuario.objects.get(pk=usuario_id)
+        deposito = Decimal(request.POST.get("deposito"))
 
+        context = {
+            "usuario": usuario
+        }
+        usuario.saldo += deposito
+
+        if deposito <= 0:
+            messages.error(request, "O valor do deposito não deve ser menor ou igual a zero!")
+            return render(request, 'deposito.html', context)
+        
+        usuario.save()
+        return render(request, 'saldo.html', context)
+
+class CadastroView(View):
+    def get(self, request):
+
+        generos = Genero.objects.all()
+
+        context = {
+            "generos": generos
+        }
+
+        return render(request, 'cadastro.html', context)
+    
+    def post(self, request):
+        try:
+            nome = request.POST.get("nome")
+            cpf = request.POST.get("cpf")
+            email = request.POST.get("email")
+            endereco = request.POST.get("endereco")
+            genero = request.POST.get("genero")
+            senha = request.POST.get("senha")
+            genero = Genero.objects.get(pk=genero)
+
+            novo_usuario = Usuario(
+                username=nome,
+                cpf=cpf,
+                email=email,
+                endereco=endereco,
+                genero=genero,
+                password=senha,
+                saldo=0
+            )
+            novo_usuario.save()
+            login(request, novo_usuario)
+
+            return HttpResponseRedirect(reverse('saldo', args=[novo_usuario.pk]))
+        
+        except:
+            messages.error(request, "Não foi possível cadastrar a pessoa. Verifique os dados e tente novamente")
+            return render(request, 'cadastro.html')
+
+class HistoricoView(View):
+    pass

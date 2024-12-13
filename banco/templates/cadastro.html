@@ -1,11 +1,69 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
+    <link rel="stylesheet" href="{% static 'css/cadastro.css' %}">
+    <link rel="stylesheet" href="{% static 'css/alerts.css'%}">
 </head>
 <body>
-    <h1>Cadastro</h1>
+    <h1>Crie uma conta</h1>
+    
+    {% if messages %}
+        <center>
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </center>
+        {% endif %}
+
+    <form action="{% url 'cadastro' %}" method="post">
+        {% csrf_token %}
+        <div class="row" id="row1">
+            <div class="box_left">
+                <legend>Digite seu Nome:</legend>
+                <input type="text" name="nome">
+            </div>
+            <div class="box_right">
+                <legend>Digite seu CPF:</legend>
+                <input type="text" name="cpf">
+            </div>
+        </div>
+        <div class="row">
+            <div class="box_left">
+                <legend>Digite seu Email:</legend>
+                <input type="email" name="email">
+            </div>
+            <div class="box_right">
+                <legend>Digite seu Endereço:</legend>
+                <input type="text" name="endereco">
+            </div>
+        </div>
+        <div class="row">
+            <div class="box_left">
+                <legend>Qual é seu gênero?</legend>
+                <select name="genero" id="genero">
+                    <option selected disabled value="">Selecione...</option>
+                    {% for genero in generos %}
+                    <option value="{{genero.pk}}">{{genero}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="box_right">
+                <legend>Crie uma senha:</legend>
+                <input type="password" name="senha">
+            </div>
+        </div>
+        <div class="row" id="last">
+            <button type="submit">Finalizar Cadastro</button>
+        </div>
+    </form>
 </body>
 </html>
