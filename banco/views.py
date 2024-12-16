@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import View
-from .models import Usuario, Genero
+from .models import Transacoes, Usuario, Genero
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from decimal import Decimal
@@ -84,6 +84,7 @@ class SaqueView(LoginRequiredMixin, View):
             "usuario": usuario
         }
         usuario.saldo -= saque
+        transacao = Transacoes(usuario=usuario, tipo='SAQUE', valor=saque)
 
         if usuario.saldo < 0:
             messages.error(request, "Não é possível retirar mais que o saldo disponível!")
@@ -94,6 +95,7 @@ class SaqueView(LoginRequiredMixin, View):
             return render(request, 'saque.html', context)
         
         usuario.save()
+        transacao.save()
         
         return render(request, 'saldo.html', context)
 
@@ -119,12 +121,14 @@ class DepositoView(LoginRequiredMixin, View):
             "usuario": usuario
         }
         usuario.saldo += deposito
+        transacao = Transacoes(usuario=usuario, tipo='DEPOSITO', valor=deposito)
 
         if deposito <= 0:
             messages.error(request, "O valor do deposito não deve ser menor ou igual a zero!")
             return render(request, 'deposito.html', context)
         
         usuario.save()
+        transacao.save()
         return render(request, 'saldo.html', context)
 
 class CadastroView(View):
@@ -167,4 +171,15 @@ class CadastroView(View):
             return render(request, 'cadastro.html')
 
 class HistoricoView(View):
-    pass
+    def get(self, request, usuario_id):
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
+        
+        usuario = Usuario.objects.get(pk=usuario_id)
+        transferencias = Transacoes.objects.filter(usuario=usuario)
+        context = {
+            "transferencias": transferencias,
+            "usuario": usuario
+        }
+        return render(request, 'historico.html', context)
+

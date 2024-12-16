@@ -1,0 +1,45 @@
+{% load static %}
+{% load datetime_field %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="{% static 'css/historico.css' %}">
+    
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="{% static 'js/historico.js' %}"></script>
+</head>
+<body>
+    <center>
+        <h1>Histórico</h1>
+        <table id="historico" class="display">
+            <thead>
+                <tr>
+                    <th>Transferências</th>
+                    <th>Valor</th>
+                    <th>Data e Horário</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transferencia in transferencias %}
+                <tr>
+                    <td>{{ transferencia.get_tipo_display }}</td>
+                    <td>R$ {{ transferencia.valor }}</td>
+                    <td>{{ transferencia.data|format_datetime }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </center>
+
+    <div class="back">
+        <a href="{% url 'saldo' usuario.pk %}"><button type="button">Voltar</button></a>
+    </div>
+
+</body>
+</html>

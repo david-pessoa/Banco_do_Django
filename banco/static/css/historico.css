@@ -1,0 +1,101 @@
+@import url('fonts.css');
+
+body{
+    background-color: #6877FF;
+}
+
+h1{
+    color: #FFF;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: bold;
+    font-size: 96px;
+}
+
+button{
+    background-color: #FDBA38;
+    font-size: 30px;
+    border: none;
+    width: 320px;
+    height: 80px;
+    font-family: 'AbeeZee', Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
+table{
+    background-color: #FFF;
+    border-color: rgba(0, 0, 0, 0.34);
+    justify-content: center;
+    text-align: center;
+    font-family: 'Jost', sans-serif;
+    color: black;
+    border-style: solid;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+thead{
+    font-size: 36px;
+    font-weight: medium;
+}
+
+tbody{
+    font-size: 32px;
+    font-weight: regular;
+}
+
+tr{
+    border-bottom: 2px solid rgba(0, 0, 0, 0.34);
+    height: 66px;
+    padding: 400px;
+}
+
+.back{
+    margin-left: 970px;
+    margin-top: 50px;
+}
+
+.saque
+{
+    color: #FF2B2B;
+}
+
+.deposito
+{
+    color: #0AAE17;
+}
+
+table.dataTable thead>tr>th.sorting:before, table.dataTable thead>tr>th.sorting:after, table.dataTable thead>tr>th.sorting_asc:before, table.dataTable thead>tr>th.sorting_asc:after, table.dataTable thead>tr>th.sorting_desc:before, table.dataTable thead>tr>th.sorting_desc:after, table.dataTable thead>tr>th.sorting_asc_disabled:before, table.dataTable thead>tr>th.sorting_asc_disabled:after, table.dataTable thead>tr>th.sorting_desc_disabled:before, table.dataTable thead>tr>th.sorting_desc_disabled:after, table.dataTable thead>tr>td.sorting:before, table.dataTable thead>tr>td.sorting:after, table.dataTable thead>tr>td.sorting_asc:before, table.dataTable thead>tr>td.sorting_asc:after, table.dataTable thead>tr>td.sorting_desc:before, table.dataTable thead>tr>td.sorting_desc:after, table.dataTable thead>tr>td.sorting_asc_disabled:before, table.dataTable thead>tr>td.sorting_asc_disabled:after, table.dataTable thead>tr>td.sorting_desc_disabled:before, table.dataTable thead>tr>td.sorting_desc_disabled:after
+{
+    line-height: 40px;
+}
+
+#historico_info.dataTables_info
+{
+    font-family: 'Jost', sans-serif;
+    font-weight: regular;
+    font-size: 32px;
+    color: black;
+}
+
+#historico_paginate.dataTables_paginate.paging_simple_numbers{
+    font-family: 'Jost', sans-serif;
+    font-weight: regular;
+    font-size: 32px;
+    color: black;
+}
+
+#historico_length.dataTables_length, #historico_filter.dataTables_filter{
+    font-family: 'Jost', sans-serif;
+    font-weight: regular;
+    font-size: 25px;
+    color: black;
+}
+
+label > input{
+    width: 300px;
+}
+
+a.paginate_button.current
+{
+    color: ;
+}

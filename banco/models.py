@@ -19,7 +19,8 @@ class Usuario(AbstractUser):
     def checa_senha(self, senha):
         return self.password == senha
 
-class Transacoes(models.Model): #TODO: FAZER A MIGRATION DESSE CARA
+
+class Transacoes(models.Model): #TODO: APLICAR AS TRANSAÇÕES
     usuario = models.ForeignKey(Usuario, on_delete=models.PROTECT, related_name="transacoes")
     TIPO_TRANSACOES = [
         ('SAQUE', 'Saque'),
@@ -39,6 +40,7 @@ class Transacoes(models.Model): #TODO: FAZER A MIGRATION DESSE CARA
     class Meta:
         verbose_name = "Transação"
         verbose_name_plural = "Transações"
+
 
 class ChavePIX(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="usuario")
