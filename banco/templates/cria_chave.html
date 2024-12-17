@@ -42,6 +42,12 @@
                 <input name="chave_pix" type="text" class="input">
             </div>
         </div>
+        {% if cria_senha_pix %}
+        <div class="container_senha">
+            <legend>Digite sua senha PIX</legend>
+            <input name="senha_pix" type="password">
+        </div>
+        {% endif %}
 
 
         <button type="submit">Cadastrar</button>

@@ -15,6 +15,7 @@ class Usuario(AbstractUser):
     cpf = models.CharField("CPF", max_length=14, default="")
     saldo = models.DecimalField("Saldo", decimal_places=2, max_digits=10, validators=[MinValueValidator(0)], default=0)
     genero = models.ForeignKey(Genero, on_delete=models.CASCADE, related_name="usuarios", default=1)
+    senha_pix = models.CharField("Senha do pix", max_length=19, default="")
 
     def checa_senha(self, senha):
         return self.password == senha

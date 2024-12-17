@@ -16,7 +16,8 @@ h2{
     color: black;
     font-family: 'Jost', sans-serif;
     font-weight: medium;
-    font-size: 74px;
+    font-size: 50px;
+    margin: 0 0 0 0;
 }
 
 button{
@@ -29,30 +30,31 @@ button{
     cursor: pointer;
 }
 
-.container{
+.box_input{
+    margin-top: 60px;
     display: flex;
-    margin-left: 200px;
-    color: black;
-    font-family: 'AbeeZee', Arial;
-    font-size: 36px;
-    margin-bottom: 30px;
+    text-align: center;
+    justify-content: center;
+    margin-bottom: 100px;
+    margin-right: 150px;
 }
 
-.container_select{
-    margin-right: 100px;
-}
-
-input, select{
+input{
+    font-family: 'Jost', sans-serif;
     outline: none;
     width: 395px;
     height: 67px;
     font-size: 40px;
-    margin-top: 10px;
 }
 
-.container_senha{
-    font-family: 'AbeeZee', Arial;
-    font-size: 36px;
-    margin-right: 510px;
-    margin-bottom: 100px;
+legend{
+    font-size: 50px;
+    color: black;
+    font-family: 'AbeeZee', sans-serif;
+}
+
+.container{
+    display: flex;
+    text-align: center;
+    margin-left: 200px;
 }

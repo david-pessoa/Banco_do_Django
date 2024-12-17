@@ -211,11 +211,17 @@ class CriaPIXView(View):
             cria = False
         else:
             cria = True
+        
+        if len(lista_exibe) == 3:
+            cria_senha_pix = True
+        else:
+            cria_senha_pix = False
 
         context = {
             "usuario": usuario,
             "habilita": cria,
-            "lista_tipos": lista_exibe
+            "lista_tipos": lista_exibe,
+            "cria_senha_pix": cria_senha_pix
         }
 
         return render(request, 'cria_chave.html', context)
@@ -227,6 +233,10 @@ class CriaPIXView(View):
             usuario = Usuario.objects.get(pk=usuario_id)
             tipo_chave = request.POST.get("tipo_chave")
             chave_pix = request.POST.get("chave_pix")
+            cria_senha_pix = request.POST.get("senha_pix")
+
+            usuario.senha_pix = cria_senha_pix
+            usuario.save()
 
             if tipo_chave == 'E-mail':
                 tipo_chave = 'EMAIL'
@@ -237,7 +247,7 @@ class CriaPIXView(View):
             nova_chave = ChavePIX(
                 usuario=usuario,
                 tipo=tipo_chave,
-                valor=chave_pix
+                valor=chave_pix,
             )
             nova_chave.save()
             return HttpResponseRedirect(reverse('saldo', args=[usuario.pk]))
@@ -256,17 +266,64 @@ class CriaPIXView(View):
                 cria = False
             else:
                 cria = True
+
+            if len(lista) == 3:
+                cria_senha_pix = True
+            else:
+                cria_senha_pix = False
     
             context = {
                 "usuario": usuario,
                 "habilita": cria,
-                "lista_tipos": lista
+                "lista_tipos": lista,
+                "cria_senha_pix": cria_senha_pix
             }
 
             return render(request, 'cria_chave.html', context)
 
 class RealizaPixView(View):
     def get(self, request, usuario_id):
-        
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
 
-        return render(request, 'realiza.html')
+        usuario = Usuario.objects.get(pk=usuario_id)
+
+        context = {
+            "usuario": usuario,
+        }
+
+        return render(request, 'realiza.html', context)
+    
+    def post(self, request, usuario_id):
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
+        
+        usuario = Usuario.objects.get(pk=usuario_id)
+
+        context = {
+                "usuario": usuario,
+            }
+        
+        try:
+            valor_pix = Decimal(request.POST.get("valor_pix"))
+            senha_pix = request.POST.get("senha_pix")
+
+            if valor_pix <= 0:
+                messages.error(request, "O valor do pix não deve ser maior que zero!")
+                return render(request, 'realiza.html', context)
+            
+            if usuario.saldo - valor_pix < 0:
+                messages.error(request, "O valor do pix não pode exceder o saldo!")
+                return render(request, 'realiza.html', context)
+            
+            if usuario.senha_pix != senha_pix:
+                messages.error(request, "Senha incorreta!")
+                return render(request, 'realiza.html', context)
+            
+            usuario.saldo -= valor_pix
+            usuario.save()
+            return render(request, 'saldo.html', context)
+        
+        except:
+            messages.error(request, "Não foi possível realizar o PIX. Verifique os dados e tente novamente")
+            return render(request, 'realiza.html', context)

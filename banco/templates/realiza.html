@@ -1,11 +1,42 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Realiza PIX</title>
+    <link rel="stylesheet" href="{% static 'css/realiza.css' %}">
+    <link rel="stylesheet" href="{% static 'css/alerts.css' %}">
 </head>
 <body>
-    <h1>Realiza PIX</h1>
+    <h1>Digite o valor do PIX e a senha</h1>
+    {% if messages %}
+        <center>
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </center>
+        {% endif %}
+
+    <form action="{% url 'realiza' usuario.pk %}" method="post">
+        {% csrf_token %}
+        <div class="container">
+            <div class="box_input">
+                <h2>R$</h2>
+                <input type="number" name="valor_pix">
+            </div>
+            <div>
+                <legend>Senha Pix</legend>
+                <input name="senha_pix" type="password">
+            </div>
+        </div>
+
+        <button type="submit">Transferir</button>
+    </form>
 </body>
 </html>
