@@ -20,7 +20,7 @@ class Usuario(AbstractUser):
         return self.password == senha
 
 
-class Transacoes(models.Model): #TODO: APLICAR AS TRANSAÇÕES
+class Transacoes(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.PROTECT, related_name="transacoes")
     TIPO_TRANSACOES = [
         ('SAQUE', 'Saque'),

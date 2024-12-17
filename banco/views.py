@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import View
-from .models import Transacoes, Usuario, Genero
+from .models import ChavePIX, Transacoes, Usuario, Genero
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from decimal import Decimal
@@ -183,3 +183,90 @@ class HistoricoView(View):
         }
         return render(request, 'historico.html', context)
 
+class CriaPIXView(View):
+    def get(self, request, usuario_id):
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
+        
+        usuario = Usuario.objects.get(pk=usuario_id)
+        chave_celular = ChavePIX.objects.filter(usuario=usuario, tipo='CELULAR')
+        chave_email = ChavePIX.objects.filter(usuario=usuario, tipo='EMAIL')
+        chave_cpf = ChavePIX.objects.filter(usuario=usuario, tipo='CPF')
+        LISTA_TIPOS = ChavePIX.TIPO_CHAVE_CHOICES
+        
+        lista_exibe = []
+        for tipo in LISTA_TIPOS:
+            lista_exibe.append(tipo[1])
+        
+        if chave_celular.count() != 0:
+            lista_exibe.remove('Número de celular')
+
+        if chave_email.count() != 0:
+            lista_exibe.remove('E-mail')
+        
+        if chave_cpf.count() != 0:
+            lista_exibe.remove('CPF')
+
+        if chave_celular.count() != 0 and chave_email.count() != 0 and chave_cpf.count() != 0:
+            cria = False
+        else:
+            cria = True
+
+        context = {
+            "usuario": usuario,
+            "habilita": cria,
+            "lista_tipos": lista_exibe
+        }
+
+        return render(request, 'cria_chave.html', context)
+    
+    def post(self, request, usuario_id):
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
+        try:
+            usuario = Usuario.objects.get(pk=usuario_id)
+            tipo_chave = request.POST.get("tipo_chave")
+            chave_pix = request.POST.get("chave_pix")
+
+            if tipo_chave == 'E-mail':
+                tipo_chave = 'EMAIL'
+            if tipo_chave == 'Número de celular':
+                tipo_chave = 'CELULAR'
+            
+
+            nova_chave = ChavePIX(
+                usuario=usuario,
+                tipo=tipo_chave,
+                valor=chave_pix
+            )
+            nova_chave.save()
+            return HttpResponseRedirect(reverse('saldo', args=[usuario.pk]))
+        except:
+            messages.error(request, "Não foi possível cadastrar a chave PIX")
+            chave_celular = ChavePIX.objects.filter(usuario=usuario, tipo='CELULAR')
+            chave_email = ChavePIX.objects.filter(usuario=usuario, tipo='EMAIL')
+            chave_cpf = ChavePIX.objects.filter(usuario=usuario, tipo='CPF')
+            LISTA_TIPOS = ChavePIX.TIPO_CHAVE_CHOICES
+        
+            lista = []
+            for tipo in LISTA_TIPOS:
+                lista.append(tipo[1])
+    
+            if chave_celular.count() != 0 and chave_email.count() != 0 and chave_cpf.count() != 0:
+                cria = False
+            else:
+                cria = True
+    
+            context = {
+                "usuario": usuario,
+                "habilita": cria,
+                "lista_tipos": lista
+            }
+
+            return render(request, 'cria_chave.html', context)
+
+class RealizaPixView(View):
+    def get(self, request, usuario_id):
+        
+
+        return render(request, 'realiza.html')

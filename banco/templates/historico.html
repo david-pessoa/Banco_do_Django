@@ -1,5 +1,7 @@
 {% load static %}
 {% load datetime_field %}
+{% load money_field %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +31,7 @@
                 {% for transferencia in transferencias %}
                 <tr>
                     <td>{{ transferencia.get_tipo_display }}</td>
-                    <td>R$ {{ transferencia.valor }}</td>
+                    <td>R$ {{ transferencia.valor|format_money }}</td>
                     <td>{{ transferencia.data|format_datetime }}</td>
                 </tr>
                 {% endfor %}

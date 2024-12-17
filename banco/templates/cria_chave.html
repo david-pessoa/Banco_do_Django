@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cria Chave PIX</title>
+    <link rel="stylesheet" href="{% static 'css/alerts.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cria_chave.css' %}">
+</head>
+<body>
+    <h1>Cadastrar chave PIX</h1>
+    {%if habilita %}
+
+    {% if messages %}
+        <center>
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </center>
+        {% endif %}
+
+    <form action="{% url 'cria_chave' usuario.pk %}" method="post">
+        {% csrf_token %}
+        <div class="container">
+            <div class="container_select">
+                <legend>Selecione o tipo da chave PIX</legend>
+                <select name="tipo_chave" id="tipo_chave">
+                    <option selected disabled value="">Selecione...</option>
+                    {% for tipo in lista_tipos %}
+                    <option value="{{tipo}}">{{tipo}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="container_input">
+                <legend>Digite a chave PIX</legend>
+                <input name="chave_pix" type="text" class="input">
+            </div>
+        </div>
+
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    {% else %}
+
+    <h2>Você já cadastrou chaves de todos os tipos, não é possível cadastrar uma nova</h2>
+
+    <a href="{% url 'saldo' usuario.pk %}"><button>Voltar</button></a>
+    {% endif %}
+
+</body>
+</html>
