@@ -1,4 +1,5 @@
 {% load static %}
+{% load chave_pix_field %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -56,6 +57,18 @@
     {% else %}
 
     <h2>Você já cadastrou chaves de todos os tipos, não é possível cadastrar uma nova</h2>
+    <div class="chaves">
+        <table>
+            <thead>
+                <tr><th>Suas chaves PIX</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>{{ chave_celular.valor|format_chave_pix }}</td></tr>
+                <tr><td>{{ chave_email.valor|format_chave_pix }}</td></tr>
+                <tr><td>{{ chave_cpf.valor|format_chave_pix }}</td></tr>
+            </tbody>
+        </table>
+    </div>
 
     <a href="{% url 'saldo' usuario.pk %}"><button>Voltar</button></a>
     {% endif %}

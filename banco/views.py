@@ -50,9 +50,14 @@ class SaldoView(LoginRequiredMixin, View):
             return HttpResponseRedirect(reverse('login'))
         
         usuario = Usuario.objects.get(pk=usuario_id)
+        if usuario.senha_pix == "":
+            faz_pix = False
+        else:
+            faz_pix = True
 
         context = {
-            "usuario": usuario
+            "usuario": usuario,
+            "faz_pix": faz_pix
         }
 
         return render(request, 'saldo.html', context)
@@ -97,7 +102,7 @@ class SaqueView(LoginRequiredMixin, View):
         usuario.save()
         transacao.save()
         
-        return render(request, 'saldo.html', context)
+        return HttpResponseRedirect(reverse('saldo', args=[usuario.pk]))
 
 class DepositoView(LoginRequiredMixin, View):
     def get(self, request, usuario_id):
@@ -129,7 +134,7 @@ class DepositoView(LoginRequiredMixin, View):
         
         usuario.save()
         transacao.save()
-        return render(request, 'saldo.html', context)
+        return HttpResponseRedirect(reverse('saldo', args=[usuario.pk]))
 
 class CadastroView(View):
     def get(self, request):
@@ -221,7 +226,10 @@ class CriaPIXView(View):
             "usuario": usuario,
             "habilita": cria,
             "lista_tipos": lista_exibe,
-            "cria_senha_pix": cria_senha_pix
+            "cria_senha_pix": cria_senha_pix,
+            "chave_celular": chave_celular[0],
+            "chave_email": chave_email[0],
+            "chave_cpf": chave_cpf[0]
         }
 
         return render(request, 'cria_chave.html', context)
@@ -307,6 +315,7 @@ class RealizaPixView(View):
         try:
             valor_pix = Decimal(request.POST.get("valor_pix"))
             senha_pix = request.POST.get("senha_pix")
+            chave_pix_recebedor = request.POST.get("chave_recebedor")
 
             if valor_pix <= 0:
                 messages.error(request, "O valor do pix não deve ser maior que zero!")
@@ -321,8 +330,10 @@ class RealizaPixView(View):
                 return render(request, 'realiza.html', context)
             
             usuario.saldo -= valor_pix
+            transacao = Transacoes(usuario=usuario, tipo='PAGAMENTO PIX', valor=valor_pix, chave_pix=chave_pix_recebedor)
+            transacao.save()
             usuario.save()
-            return render(request, 'saldo.html', context)
+            return HttpResponseRedirect(reverse('saldo', args=[usuario.pk]))
         
         except:
             messages.error(request, "Não foi possível realizar o PIX. Verifique os dados e tente novamente")

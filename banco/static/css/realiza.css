@@ -28,6 +28,8 @@ button{
     height: 80px;
     font-family: 'AbeeZee', Arial, Helvetica, sans-serif;
     cursor: pointer;
+    margin-top: 50px;
+    margin-left: 300px;
 }
 
 .box_input{
@@ -35,7 +37,7 @@ button{
     display: flex;
     text-align: center;
     justify-content: center;
-    margin-bottom: 100px;
+    margin-bottom: 50px;
     margin-right: 150px;
 }
 
@@ -57,4 +59,9 @@ legend{
     display: flex;
     text-align: center;
     margin-left: 200px;
+}
+
+.bottom_container{
+    display: flex;
+    margin-left: 250px;
 }

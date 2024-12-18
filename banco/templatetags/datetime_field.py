@@ -1,7 +1,8 @@
 from django import template
-from datetime import datetime
+from django.utils.timezone import localtime
 
 register = template.Library()
 @register.filter(name="format_datetime")
 def format_datetime(value):
-    return value.strftime("%d/%m/%Y  %H:%M")
+    fuso = localtime(value)
+    return fuso.strftime("%d/%m/%Y  %H:%M")

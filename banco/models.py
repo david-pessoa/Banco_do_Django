@@ -31,6 +31,7 @@ class Transacoes(models.Model):
     tipo = models.CharField("Tipo de transação", max_length=20, choices=TIPO_TRANSACOES)
     valor = models.DecimalField("Valor", decimal_places=2, max_digits=10, validators=[MinValueValidator(0)])
     data = models.DateTimeField("Data e horário da transação", auto_now_add=True)
+    chave_pix = models.CharField("Chave pix do recebedor", max_length=30, default="")
 
     def save(self, *args, **kwargs):
         # Impede alterações em objetos existentes

@@ -27,7 +27,7 @@
         {% csrf_token %}
         <div class="box_input">
             <h2>R$</h2>
-            <input type="number" name="deposito">
+            <input type="number" name="deposito" value="{{ request.POST.deposito }}">
         </div>
 
         <button type="submit">Depositar</button>

@@ -8,6 +8,9 @@
     <title>Cadastro</title>
     <link rel="stylesheet" href="{% static 'css/cadastro.css' %}">
     <link rel="stylesheet" href="{% static 'css/alerts.css'%}">
+    
+    <script src="{% static 'js/views/cadastro.js' %}"></script>
+    <script src="{% static 'js/custom_parsley_validators.js' %}"></script>
 </head>
 <body>
     <h1>Crie uma conta</h1>
@@ -29,21 +32,24 @@
         <div class="row" id="row1">
             <div class="box_left">
                 <legend>Digite seu Nome:</legend>
-                <input type="text" name="nome">
+                <input type="text" name="nome" value="{{request.POST.nome}}"
+                data-parsley-required="true"
+                data-parsley-pattern="/^[a-zA-ZÀ-ÖØ-öø-ÿ]+(\s[a-zA-ZÀ-ÖØ-öø-ÿ]+)*$/"
+                >
             </div>
             <div class="box_right">
                 <legend>Digite seu CPF:</legend>
-                <input type="text" name="cpf">
+                <input type="text" name="cpf" value="{{request.POST.cpf}}">
             </div>
         </div>
         <div class="row">
             <div class="box_left">
                 <legend>Digite seu Email:</legend>
-                <input type="email" name="email">
+                <input type="email" name="email" value="{{request.POST.email}}">
             </div>
             <div class="box_right">
                 <legend>Digite seu Endereço:</legend>
-                <input type="text" name="endereco">
+                <input type="text" name="endereco" value="{{request.POST.endereco}}">
             </div>
         </div>
         <div class="row">
@@ -62,7 +68,7 @@
             </div>
         </div>
         <div class="row" id="last">
-            <button type="submit">Finalizar Cadastro</button>
+            <button id="save_btn" type="submit">Finalizar Cadastro</button>
         </div>
     </form>
 </body>
