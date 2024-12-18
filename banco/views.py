@@ -10,6 +10,7 @@ from .models import ChavePIX, Transacoes, Usuario, Genero
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from decimal import Decimal
+from .templatetags.money_field import format_money_back_end
 
 class LoginView(View):
     def get(self, request):
@@ -83,7 +84,7 @@ class SaqueView(LoginRequiredMixin, View):
             return HttpResponseRedirect(reverse('login'))
         
         usuario = Usuario.objects.get(pk=usuario_id)
-        saque = Decimal(request.POST.get("saque"))
+        saque = Decimal(format_money_back_end(request.POST.get("saque")))
 
         context = {
             "usuario": usuario
@@ -120,7 +121,7 @@ class DepositoView(LoginRequiredMixin, View):
             return HttpResponseRedirect(reverse('login'))
         
         usuario = Usuario.objects.get(pk=usuario_id)
-        deposito = Decimal(request.POST.get("deposito"))
+        deposito = Decimal(format_money_back_end(request.POST.get("deposito")))
 
         context = {
             "usuario": usuario
@@ -205,14 +206,23 @@ class CriaPIXView(View):
         
         if chave_celular.count() != 0:
             lista_exibe.remove('Número de celular')
+            chave_celular = chave_celular[0]
+        else:
+            chave_celular = None
 
         if chave_email.count() != 0:
             lista_exibe.remove('E-mail')
+            chave_email = chave_email[0]
+        else:
+            chave_email = None
         
         if chave_cpf.count() != 0:
             lista_exibe.remove('CPF')
+            chave_cpf = chave_cpf[0]
+        else:
+            chave_cpf = None
 
-        if chave_celular.count() != 0 and chave_email.count() != 0 and chave_cpf.count() != 0:
+        if not chave_celular is None and not chave_email is None and not chave_cpf is None:
             cria = False
         else:
             cria = True
@@ -227,9 +237,9 @@ class CriaPIXView(View):
             "habilita": cria,
             "lista_tipos": lista_exibe,
             "cria_senha_pix": cria_senha_pix,
-            "chave_celular": chave_celular[0],
-            "chave_email": chave_email[0],
-            "chave_cpf": chave_cpf[0]
+            "chave_celular": chave_celular,
+            "chave_email": chave_email,
+            "chave_cpf": chave_cpf,
         }
 
         return render(request, 'cria_chave.html', context)
@@ -243,14 +253,18 @@ class CriaPIXView(View):
             chave_pix = request.POST.get("chave_pix")
             cria_senha_pix = request.POST.get("senha_pix")
 
-            usuario.senha_pix = cria_senha_pix
-            usuario.save()
+            chave_celular = ChavePIX.objects.filter(usuario=usuario, tipo='CELULAR')
+            chave_email = ChavePIX.objects.filter(usuario=usuario, tipo='EMAIL')
+            chave_cpf = ChavePIX.objects.filter(usuario=usuario, tipo='CPF')
+
+            if not chave_celular.exists() and not chave_email.exists() and not chave_cpf.exists():
+                usuario.senha_pix = cria_senha_pix
+                usuario.save()
 
             if tipo_chave == 'E-mail':
                 tipo_chave = 'EMAIL'
             if tipo_chave == 'Número de celular':
                 tipo_chave = 'CELULAR'
-            
 
             nova_chave = ChavePIX(
                 usuario=usuario,
@@ -269,8 +283,26 @@ class CriaPIXView(View):
             lista = []
             for tipo in LISTA_TIPOS:
                 lista.append(tipo[1])
+            
+            if chave_celular.count() != 0:
+                lista.remove('Número de celular')
+                chave_celular = chave_celular[0]
+            else:
+                chave_celular = None
+
+            if chave_email.count() != 0:
+                lista.remove('E-mail')
+                chave_email = chave_email[0]
+            else:
+                chave_email = None
+
+            if chave_cpf.count() != 0:
+                lista.remove('CPF')
+                chave_cpf = chave_cpf[0]
+            else:
+                chave_cpf = None
     
-            if chave_celular.count() != 0 and chave_email.count() != 0 and chave_cpf.count() != 0:
+            if not chave_celular is None and not chave_email is None and not chave_cpf is None:
                 cria = False
             else:
                 cria = True
@@ -313,7 +345,7 @@ class RealizaPixView(View):
             }
         
         try:
-            valor_pix = Decimal(request.POST.get("valor_pix"))
+            valor_pix = Decimal(format_money_back_end(request.POST.get("valor_pix")))
             senha_pix = request.POST.get("senha_pix")
             chave_pix_recebedor = request.POST.get("chave_recebedor")
 

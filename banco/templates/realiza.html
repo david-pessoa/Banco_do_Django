@@ -8,6 +8,12 @@
     <title>Realiza PIX</title>
     <link rel="stylesheet" href="{% static 'css/realiza.css' %}">
     <link rel="stylesheet" href="{% static 'css/alerts.css' %}">
+    <link rel="stylesheet" href="{% static 'css/parsley.css' %}">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{% static 'js/parsley.min.js' %}"></script>
+    <script src="{% static 'js/views/realiza.js' %}"></script>
+    <script src="{% static 'js/custom_parsley_validators.js' %}"></script>
 </head>
 <body>
     <h1>Digite o valor do PIX e a senha</h1>
@@ -28,19 +34,38 @@
         <div class="container">
             <div class="box_input">
                 <h2>R$</h2>
-                <input type="number" name="valor_pix">
+                <input type="text" name="valor_pix" id="money"
+                data-parsley-required="true"
+                data-parsley-trigger="change"
+                data-parsley-required-message="Campo Obrigatório"
+                maxlength="10"
+                value="{{ request.POST.valor_pix }}"
+                >
             </div>
             <div>
                 <legend>Chave PIX do recebedor</legend>
-                <input name="chave_recebedor" type="text">
+                <input name="chave_recebedor" type="text" id="chave"
+                data-parsley-required="true"
+                data-parsley-chave-pix="true"
+                data-parsley-chave-pix-message="Chave pix inválida"
+                data-parsley-trigger="change"
+                data-parsley-required-message="Campo Obrigatório"
+                maxlength="30"
+                value="{{ request.POST.chave_recebedor }}"
+                >
             </div>
         </div>
         <div class="bottom_container">
             <div>
                 <legend>Senha Pix</legend>
-                <input name="senha_pix" type="password">
+                <input name="senha_pix" type="password"
+                data-parsley-required="true"
+                data-parsley-trigger="change"
+                data-parsley-required-message="Campo Obrigatório"
+                maxlength="30"
+                >
             </div>
-            <button type="submit">Transferir</button>
+            <button id="save_btn" type="submit">Transferir</button>
         </div>
     </form>
 </body>

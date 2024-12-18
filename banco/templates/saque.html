@@ -1,4 +1,5 @@
 {% load static %}
+{% load money_field %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,6 +9,9 @@
     <title>Saque</title>
     <link rel="stylesheet" href="{% static 'css/saque_deposito.css' %}">
     <link rel="stylesheet" href="{% static 'css/alerts.css' %}">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{% static 'js/parsley.min.js' %}"></script>
+    <script src="{% static 'js/views/saque_deposito.js' %}" ></script>
 </head>
 <body>
     <h1>Digite o valor a ser sacado</h1>
@@ -27,7 +31,7 @@
         {% csrf_token %}
         <div class="box_input">
             <h2>R$</h2>
-            <input type="number" name="saque">
+            <input type="text" name="saque" id="money" value="{{ request.POST.saque }}">
         </div>
 
         <button type="submit">Sacar</button>

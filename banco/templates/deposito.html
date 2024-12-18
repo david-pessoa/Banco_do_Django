@@ -8,6 +8,9 @@
     <title>Saque</title>
     <link rel="stylesheet" href="{% static 'css/saque_deposito.css' %}">
     <link rel="stylesheet" href="{% static 'css/alerts.css' %}">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{% static 'js/views/saque_deposito.js' %}" ></script>
 </head>
 <body>
     <h1>Digite o valor a ser depositado</h1>
@@ -27,7 +30,7 @@
         {% csrf_token %}
         <div class="box_input">
             <h2>R$</h2>
-            <input type="number" name="deposito" value="{{ request.POST.deposito }}">
+            <input type="text" id="money" name="deposito" value="{{ request.POST.deposito }}">
         </div>
 
         <button type="submit">Depositar</button>
