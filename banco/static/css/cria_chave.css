@@ -36,7 +36,7 @@ button{
     color: black;
     font-family: 'AbeeZee', Arial;
     font-size: 36px;
-    margin-bottom: 100px;
+    margin-bottom: 50px;
 }
 
 .container_select{
@@ -71,6 +71,12 @@ table{
     width: 100%;
     font-family: 'AbeeZee';
     margin-bottom: 20px;
+}
+
+table.not_all{
+    width: 65%;
+    font-family: 'AbeeZee';
+    margin-bottom: 40px;
 }
 
 th{

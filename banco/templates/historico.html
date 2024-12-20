@@ -15,6 +15,9 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="{% static 'js/views/historico.js' %}"></script>
+    <script>
+        const usuario_id = "{{ usuario.pk }}";
+    </script>
 </head>
 <body>
     <center>
@@ -28,15 +31,10 @@
                 </tr>
             </thead>
             <tbody>
-                {% for transferencia in transferencias %}
-                <tr>
-                    <td>{{ transferencia.get_tipo_display }}</td>
-                    <td>R$ {{ transferencia.valor|format_money }}</td>
-                    <td>{{ transferencia.data|format_datetime }}</td>
-                </tr>
-                {% endfor %}
+                <!--RENDERIZADO PELO DATATABLES-->
             </tbody>
         </table>
+        
     </center>
 
     <div class="back">

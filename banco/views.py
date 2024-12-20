@@ -1,10 +1,10 @@
 from multiprocessing import context
-from sqlite3 import SQLITE_CANTOPEN_CONVPATH
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views import View
 from .models import ChavePIX, Transacoes, Usuario, Genero
 from django.contrib import messages
@@ -100,6 +100,11 @@ class SaqueView(LoginRequiredMixin, View):
             messages.error(request, "O valor do saque não deve ser menor ou igual a zero!")
             return render(request, 'saque.html', context)
         
+        result = transacao.verifica(False)
+        if result != True:
+            messages.error(request, result)
+            return render(request, 'saque.html', context)
+        
         usuario.save()
         transacao.save()
         
@@ -128,6 +133,11 @@ class DepositoView(LoginRequiredMixin, View):
         }
         usuario.saldo += deposito
         transacao = Transacoes(usuario=usuario, tipo='DEPOSITO', valor=deposito)
+
+        result = transacao.verifica(False)
+        if result != True:
+            messages.error(request, result)
+            return render(request, 'deposito.html', context)
 
         if deposito <= 0:
             messages.error(request, "O valor do deposito não deve ser menor ou igual a zero!")
@@ -167,6 +177,16 @@ class CadastroView(View):
                 password=senha,
                 saldo=0
             )
+
+            result = novo_usuario.verifica()
+            if result != True:
+                generos = Genero.objects.all()
+                context = {
+                    "generos": generos
+                }
+                messages.error(request, result)
+                return render(request, 'cadastro.html', context)
+
             novo_usuario.save()
             login(request, novo_usuario)
 
@@ -182,12 +202,41 @@ class HistoricoView(View):
             return HttpResponseRedirect(reverse('login'))
         
         usuario = Usuario.objects.get(pk=usuario_id)
-        transferencias = Transacoes.objects.filter(usuario=usuario)
-        context = {
-            "transferencias": transferencias,
-            "usuario": usuario
-        }
-        return render(request, 'historico.html', context)
+        transferencias = Transacoes.objects.filter(usuario=usuario).order_by('-data')
+    
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            # Ordenação (pegando o índice e a direção enviados pelo DataTables)
+            print(int(request.GET.get("start", 0)))
+
+            # Paginação
+            page_number = int(request.GET.get("start", 0)) // int(request.GET.get("length", 10)) + 1
+            paginator = Paginator(transferencias, int(request.GET.get("length", 10)))
+            page = paginator.get_page(page_number)
+
+            # Formatar os dados para o DataTables
+            data = [
+                {
+                    "tipo": transferencia.tipo,
+                    "valor": transferencia.valor,
+                    "data": transferencia.data.strftime("%d/%m/%Y %H:%M"),
+                }
+                for transferencia in page.object_list
+            ]
+
+            response = {
+                "draw": int(request.GET.get("draw", 0)),
+                "recordsTotal": paginator.count,
+                "recordsFiltered": paginator.count,
+                "data": data,
+            }
+            return JsonResponse(response)
+        
+        else:
+            context = {
+                "transferencias": transferencias,
+                "usuario": usuario,
+            }
+            return render(request, 'historico.html', context)
 
 class CriaPIXView(View):
     def get(self, request, usuario_id):
@@ -247,6 +296,7 @@ class CriaPIXView(View):
     def post(self, request, usuario_id):
         if not request.user.is_authenticated:
             return HttpResponseRedirect(reverse('login'))
+        result = ""
         try:
             usuario = Usuario.objects.get(pk=usuario_id)
             tipo_chave = request.POST.get("tipo_chave")
@@ -271,10 +321,16 @@ class CriaPIXView(View):
                 tipo=tipo_chave,
                 valor=chave_pix,
             )
+            result = nova_chave.verifica()
+            if result != True:
+                raise ValidationError(result)
             nova_chave.save()
             return HttpResponseRedirect(reverse('saldo', args=[usuario.pk]))
         except:
-            messages.error(request, "Não foi possível cadastrar a chave PIX")
+            if result == "":
+                messages.error(request, "Não foi possível cadastrar a chave PIX")
+            else:
+                messages.error(request, result)
             chave_celular = ChavePIX.objects.filter(usuario=usuario, tipo='CELULAR')
             chave_email = ChavePIX.objects.filter(usuario=usuario, tipo='EMAIL')
             chave_cpf = ChavePIX.objects.filter(usuario=usuario, tipo='CPF')
@@ -316,7 +372,10 @@ class CriaPIXView(View):
                 "usuario": usuario,
                 "habilita": cria,
                 "lista_tipos": lista,
-                "cria_senha_pix": cria_senha_pix
+                "cria_senha_pix": cria_senha_pix,
+                "chave_celular": chave_celular,
+                "chave_email": chave_email,
+                "chave_cpf": chave_cpf,
             }
 
             return render(request, 'cria_chave.html', context)
@@ -343,7 +402,7 @@ class RealizaPixView(View):
         context = {
                 "usuario": usuario,
             }
-        
+        result = ""
         try:
             valor_pix = Decimal(format_money_back_end(request.POST.get("valor_pix")))
             senha_pix = request.POST.get("senha_pix")
@@ -363,10 +422,18 @@ class RealizaPixView(View):
             
             usuario.saldo -= valor_pix
             transacao = Transacoes(usuario=usuario, tipo='PAGAMENTO PIX', valor=valor_pix, chave_pix=chave_pix_recebedor)
+            result = transacao.verifica(True)
+            if result != True:
+                raise ValidationError(result)
+
             transacao.save()
             usuario.save()
             return HttpResponseRedirect(reverse('saldo', args=[usuario.pk]))
         
         except:
-            messages.error(request, "Não foi possível realizar o PIX. Verifique os dados e tente novamente")
+            if result == "":
+                messages.error(request, "Não foi possível realizar o PIX. Verifique os dados e tente novamente")
+            else:
+                messages.error(request, result)
+
             return render(request, 'realiza.html', context)
