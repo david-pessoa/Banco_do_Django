@@ -16,7 +16,7 @@ h2{
     color: black;
     font-family: 'Jost', sans-serif;
     font-weight: medium;
-    font-size: 74px;
+    font-size: 80px;
 }
 
 button{
@@ -29,24 +29,18 @@ button{
     cursor: pointer;
 }
 
-button.exit{
-    margin-left: 100px;
-    width: 70px;
-}
-
-.top{
+.box_input{
     display: flex;
-    width: 100%;
     text-align: center;
     justify-content: center;
+    margin-bottom: 100px;
 }
 
-
-table{
-    margin-left: 100px;
-    border-spacing: 70px;
-}
-
-.col1{
-    margin-left: 90px;
+input{
+    font-size: 80px;
+    font-family: 'Jost', sans-serif;
+    outline: none;
+    width: 550px;
+    height: 116px;
+    margin-top: 60px;
 }

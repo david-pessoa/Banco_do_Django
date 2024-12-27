@@ -1,0 +1,52 @@
+@import url('fonts.css');
+
+body{
+    background-color: #6877FF;
+    text-align: center;
+}
+
+legend{
+    font-size: 36px;
+    text-align: left;
+    padding-left: 415px;
+    font-family: 'AbeeZee', Arial, Helvetica, sans-serif;
+}
+
+input{
+    width: 590px;
+    height: 70px;
+    font-family: 'AbeeZee';
+    font-size: 30px;
+    outline: none;
+}
+
+h1{
+    color: #FFF;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: bold;
+    font-size: 96px;
+}
+
+.container_button{
+    margin-top: 100px;
+    display: flex;
+    margin-left: 200px;
+}
+
+.senha_container{
+    margin-top: 40px;
+}
+
+button{
+    background-color: #FDBA38;
+    font-size: 30px;
+    border: none;
+    width: 320px;
+    height: 80px;
+    font-family: 'AbeeZee', Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
+#cadastro{
+    margin-right: 360px;
+}

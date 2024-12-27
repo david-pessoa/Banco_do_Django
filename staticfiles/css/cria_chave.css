@@ -1,0 +1,87 @@
+@import url('fonts.css');
+
+body{
+    background-color: #6877FF;
+    text-align: center;
+}
+
+h1{
+    color: #FFF;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: bold;
+    font-size: 96px;
+}
+
+h2{
+    color: black;
+    font-family: 'Jost', sans-serif;
+    font-weight: medium;
+    font-size: 74px;
+    margin-bottom: 20px;
+}
+
+button{
+    background-color: #FDBA38;
+    font-size: 30px;
+    border: none;
+    width: 320px;
+    height: 80px;
+    font-family: 'AbeeZee', Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
+.container{
+    display: flex;
+    margin-left: 200px;
+    color: black;
+    font-family: 'AbeeZee', Arial;
+    font-size: 36px;
+    margin-bottom: 50px;
+}
+
+.container_select{
+    margin-right: 100px;
+}
+
+input, select{
+    outline: none;
+    width: 395px;
+    height: 67px;
+    font-size: 40px;
+    margin-top: 10px;
+}
+
+input{
+    font-family: 'AbeeZee';
+}
+
+.container_senha{
+    font-family: 'AbeeZee', Arial;
+    font-size: 36px;
+    margin-right: 510px;
+    margin-bottom: 100px;
+}
+
+.chaves{
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+}
+table{
+    width: 100%;
+    font-family: 'AbeeZee';
+    margin-bottom: 20px;
+}
+
+table.not_all{
+    width: 65%;
+    font-family: 'AbeeZee';
+    margin-bottom: 40px;
+}
+
+th{
+    font-size: 40px;
+}
+td{
+    font-size: 30px;
+}

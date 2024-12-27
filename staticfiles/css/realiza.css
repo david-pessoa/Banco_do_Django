@@ -16,7 +16,8 @@ h2{
     color: black;
     font-family: 'Jost', sans-serif;
     font-weight: medium;
-    font-size: 74px;
+    font-size: 50px;
+    margin: 0 0 0 0;
 }
 
 button{
@@ -27,26 +28,40 @@ button{
     height: 80px;
     font-family: 'AbeeZee', Arial, Helvetica, sans-serif;
     cursor: pointer;
+    margin-top: 50px;
+    margin-left: 300px;
 }
 
-button.exit{
-    margin-left: 100px;
-    width: 70px;
-}
-
-.top{
+.box_input{
+    margin-top: 60px;
     display: flex;
-    width: 100%;
     text-align: center;
     justify-content: center;
+    margin-bottom: 50px;
+    margin-right: 150px;
 }
 
-
-table{
-    margin-left: 100px;
-    border-spacing: 70px;
+input{
+    font-family: 'AbeeZee', sans-serif;
+    outline: none;
+    width: 395px;
+    height: 67px;
+    font-size: 40px;
 }
 
-.col1{
-    margin-left: 90px;
+legend{
+    font-size: 50px;
+    color: black;
+    font-family: 'AbeeZee', sans-serif;
+}
+
+.container{
+    display: flex;
+    text-align: center;
+    margin-left: 200px;
+}
+
+.bottom_container{
+    display: flex;
+    margin-left: 250px;
 }

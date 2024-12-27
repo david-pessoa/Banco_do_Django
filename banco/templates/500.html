@@ -1,0 +1,22 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saldo</title>
+    <link rel="stylesheet" href="{% static 'css/saldo.css' %}">
+</head>
+<body>
+    
+    <div class="top">
+        <h1>Erro de Processamento</h1>
+    </div>
+
+    <h2>Houve alugum erro interno ao enviar a requisição para o servidor :/</h2>
+
+    <a href="{% url 'login' %}"><button>Voltar</button></a>
+
+</body>
+</html>
