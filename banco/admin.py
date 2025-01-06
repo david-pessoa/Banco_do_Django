@@ -1,6 +1,5 @@
-from atexit import register
 from django.contrib import admin
-from .models import Usuario, Genero, ChavePIX, Transacoes
+from .models import *
 from django.contrib.auth.admin import UserAdmin
 
 @admin.register(Usuario)
@@ -25,6 +24,6 @@ class ChavePIXAdmin(admin.ModelAdmin):
 @admin.register(Transacoes)
 class TransacoesAdmin(admin.ModelAdmin):
     list_display = (
-        "id", "usuario", "tipo", "valor"
+        "id", "usuario", "tipo", "valor", "data"
     )
 

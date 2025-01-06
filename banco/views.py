@@ -6,11 +6,15 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views import View
-from .models import ChavePIX, Transacoes, Usuario, Genero
+from .models import *
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 from .templatetags.money_field import format_money_back_end
+from django.utils import timezone
+from django.db.models import Q
+from django.utils.timezone import make_aware
+from datetime import datetime, timedelta
 
 class LoginView(View):
     def get(self, request):
@@ -207,20 +211,79 @@ class HistoricoView(View):
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             # Ordenação (pegando o índice e a direção enviados pelo DataTables)
             print(int(request.GET.get("start", 0)))
+            ordering_column_index = int(
+                request.GET.get(
+                    "order[0][column]", 0
+                )  # Default é o 0. (Index da col data)
+            )
+            ordering_column = request.GET.get(
+                f"columns[{ordering_column_index}][data]",
+                "data",  # Default é a coluna data
+            )
+            ordering_direction = request.GET.get(
+                "order[0][dir]", "asc"
+            )  # Default é asc
+
+            if ordering_direction not in ["asc", "desc"]:
+                ordering_direction = "asc"
+            
+            # --- FORMATA E APLICA A ORDENAÇÃO DO QUERYSET CONFORME ESTRUTURA DE CADA COLUNA ---
+            if ordering_column in [
+                "tipo",
+                "valor",
+                "data",
+            ]:  # Não podem usar a função Lower
+                transferencias = transferencias.order_by(ordering_column)
+
+            if ordering_direction == "desc":
+                transferencias = transferencias.reverse()
+
+             # Parâmetro de busca
+            search_param = request.GET.get("search_param", "")
+            data_param = False
+            try:
+                # Converte 'DD/MM/YYYY HH:MM' para 'YYYY-MM-DD HH:MM'
+                local_dt = datetime.strptime(search_param, '%d/%m/%Y %H:%M')
+
+                # Ajusta para UTC - 3
+                utc_dt = local_dt + timedelta(hours=3)
+
+                # Torna a data consciente de fuso horário
+                utc_dt = make_aware(utc_dt)
+
+                # Busca por datas contendo a string ISO formatada
+                search_param = utc_dt.strftime('%Y-%m-%d %H:%M')
+                data_param = True
+            except ValueError:
+                # Handle cases where parsing might fail
+                data_param = False
+
+            # 2025-01-06 16:21:44+00:00
+            if search_param and data_param:
+                transferencias = transferencias.filter(
+                    Q(valor__icontains=search_param)
+                    | Q(data__icontains=search_param)
+                    | Q(tipo__icontains=search_param)
+                )
+            elif search_param:
+                transferencias = transferencias.filter(
+                    Q(valor__icontains=search_param)
+                    | Q(tipo__icontains=search_param)
+                )
 
             # Paginação
             page_number = int(request.GET.get("start", 0)) // int(request.GET.get("length", 10)) + 1
             paginator = Paginator(transferencias, int(request.GET.get("length", 10)))
-            page = paginator.get_page(page_number)
+            pagina = paginator.get_page(page_number).object_list
 
             # Formatar os dados para o DataTables
             data = [
                 {
                     "tipo": transferencia.tipo,
                     "valor": transferencia.valor,
-                    "data": transferencia.data.strftime("%d/%m/%Y %H:%M"),
+                    "data": timezone.localtime(transferencia.data).strftime("%d/%m/%Y %H:%M"),
                 }
-                for transferencia in page.object_list
+                for transferencia in pagina
             ]
 
             response = {

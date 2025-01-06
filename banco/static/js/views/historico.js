@@ -10,14 +10,20 @@ $(document).ready(function () {
             "url": `/historico/${usuario_id}`,
             "type": "GET",
             "dataScr": "data",
-        
+            "data": function(d) {
+                // Adiciona o search_param aos dados enviados
+                d.search_param = $('input').val(); // Assumindo que o search_param é retirado de um input com id="searchInput"
+            }
         },
+        "order": [[2, "desc"]], // Ordena pela terceira coluna em ordem decrescente
         "columns": [
             {"data": "tipo"},
             {"data": "valor",
                 "render": function(valor, type, row) {
-                if (type === 'sort' || type === 'type') { //Verificar isso
-                    return valor;
+                if (type === 'sort' || type === 'type') {
+                    valor = valor.replace(/\D/g, "");
+                    // Converte para número com duas casas decimais
+                    return (parseInt(valor) / 100).toFixed(2);
                 }
                 return valor; // Formato exibido
                 }
