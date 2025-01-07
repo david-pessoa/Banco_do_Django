@@ -257,8 +257,11 @@ class HistoricoView(View):
             except ValueError:
                 # Handle cases where parsing might fail
                 data_param = False
+            
+            search_param = search_param.replace('.', '').replace(',', '.')
 
-            # 2025-01-06 16:21:44+00:00
+            # 06/01/2025 13:21 (Horário exibido)
+            # 2025-01-06 16:21:44+00:00 (Horário no banco de dados)
             if search_param and data_param:
                 transferencias = transferencias.filter(
                     Q(valor__icontains=search_param)
