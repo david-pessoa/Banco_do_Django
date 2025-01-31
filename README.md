@@ -12,7 +12,7 @@ Caso deseje instalar a aplicação, antes é necessário possuir instalados em s
 
 ### 1) Clone o repositório e entre no diretório Fusion
 ```sh
-git clone https://github.com/david-pessoa/Fusion.git
+git clone https://github.com/david-pessoa/Banco_do_Django.git
 cd Fusion
 ```
 
