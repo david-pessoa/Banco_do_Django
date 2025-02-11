@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.hashers import check_password
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views import View
 from .models import *
@@ -37,7 +38,7 @@ class LoginView(View):
             senha = request.POST.get("senha")
             usuario = Usuario.objects.get(cpf=cpf)
 
-            if usuario is not None and usuario.is_active and usuario.checa_senha(senha):
+            if usuario is not None and usuario.is_active and check_password(senha, usuario.password):
                 login(request, usuario)
                 return HttpResponseRedirect(reverse('saldo', args=[usuario.pk]))
             else:
@@ -178,9 +179,10 @@ class CadastroView(View):
                 email=email,
                 endereco=endereco,
                 genero=genero,
-                password=senha,
                 saldo=0
             )
+
+            novo_usuario.set_password(senha)
 
             result = novo_usuario.verifica()
             if result != True:

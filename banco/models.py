@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -11,15 +11,40 @@ class Genero(models.Model):
     def __str__(self):
         return self.genero
 
+class UsuarioManager(BaseUserManager):
+    use_in_migrations = True
+
+    def _create_user(self, username, password, **extra_fields):
+        if not username:
+            raise ValueError("O nome de usuário é obrigatório!")
+        user = self.model(username=username, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+    
+    def create_user(self, username, password = None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(username, password, **extra_fields)
+    
+    def create_superuser(self, username, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser precisa ter is_superuser=True')
+        
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser precisa ter is_staff=True')
+        
+        return self._create_user(username, password, **extra_fields)
+
 class Usuario(AbstractUser):
     endereco = models.CharField("Endereço", max_length= 100, default="")
     cpf = models.CharField("CPF", max_length=14, default="")
     saldo = models.DecimalField("Saldo", decimal_places=2, max_digits=10, validators=[MinValueValidator(0)], default=0)
     genero = models.ForeignKey(Genero, on_delete=models.CASCADE, related_name="usuarios", default=1)
     senha_pix = models.CharField("Senha do pix", max_length=19, default="")
-
-    def checa_senha(self, senha):
-        return self.password == senha
     
     def verifica(self):
         #Verifica se o Gênero é válido
@@ -27,6 +52,11 @@ class Usuario(AbstractUser):
             return "Gênero ineválido"
         
         return valida_CPF(self.cpf)
+    
+    objects = UsuarioManager()
+    
+    def __str__(self):
+        return self.username
 
 
 class Transacoes(models.Model):

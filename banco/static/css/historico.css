@@ -20,6 +20,7 @@ button{
     font-family: 'AbeeZee', Arial, Helvetica, sans-serif;
     cursor: pointer;
     margin-bottom: 40px;
+    margin-left: 70%;
 }
 
 table{
@@ -59,7 +60,7 @@ tr{
 }
 
 .back{
-    margin-left: 970px;
+    width: 100%;
     margin-top: 50px;
 }
 
