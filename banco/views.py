@@ -52,9 +52,6 @@ class LoginView(View):
 
 class SaldoView(LoginRequiredMixin, View):
     def get(self, request, usuario_id):
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        
         usuario = Usuario.objects.get(pk=usuario_id)
         if usuario.senha_pix == "":
             faz_pix = False
@@ -75,9 +72,6 @@ class SaldoView(LoginRequiredMixin, View):
 
 class SaqueView(LoginRequiredMixin, View):
     def get(self, request, usuario_id):
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        
         usuario = Usuario.objects.get(pk=usuario_id)
         context = {
             "usuario": usuario
@@ -85,9 +79,6 @@ class SaqueView(LoginRequiredMixin, View):
         return render(request, 'saque.html', context)
     
     def post(self, request, usuario_id):
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        
         usuario = Usuario.objects.get(pk=usuario_id)
         saque = Decimal(format_money_back_end(request.POST.get("saque")))
 
@@ -117,9 +108,6 @@ class SaqueView(LoginRequiredMixin, View):
 
 class DepositoView(LoginRequiredMixin, View):
     def get(self, request, usuario_id):
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        
         usuario = Usuario.objects.get(pk=usuario_id)
         context = {
             "usuario": usuario
@@ -127,9 +115,6 @@ class DepositoView(LoginRequiredMixin, View):
         return render(request, 'deposito.html', context)
     
     def post(self, request, usuario_id):
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        
         usuario = Usuario.objects.get(pk=usuario_id)
         deposito = Decimal(format_money_back_end(request.POST.get("deposito")))
 
@@ -202,11 +187,8 @@ class CadastroView(View):
             messages.error(request, "Não foi possível cadastrar a pessoa. Verifique os dados e tente novamente")
             return render(request, 'cadastro.html')
 
-class HistoricoView(View):
+class HistoricoView(LoginRequiredMixin, View):
     def get(self, request, usuario_id):
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        
         usuario = Usuario.objects.get(pk=usuario_id)
         transferencias = Transacoes.objects.filter(usuario=usuario).order_by('-data')
     
@@ -306,11 +288,8 @@ class HistoricoView(View):
             }
             return render(request, 'historico.html', context)
 
-class CriaPIXView(View):
+class CriaPIXView(LoginRequiredMixin, View):
     def get(self, request, usuario_id):
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        
         usuario = Usuario.objects.get(pk=usuario_id)
         chave_celular = ChavePIX.objects.filter(usuario=usuario, tipo='CELULAR')
         chave_email = ChavePIX.objects.filter(usuario=usuario, tipo='EMAIL')
@@ -362,8 +341,6 @@ class CriaPIXView(View):
         return render(request, 'cria_chave.html', context)
     
     def post(self, request, usuario_id):
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
         result = ""
         try:
             usuario = Usuario.objects.get(pk=usuario_id)
@@ -448,11 +425,8 @@ class CriaPIXView(View):
 
             return render(request, 'cria_chave.html', context)
 
-class RealizaPixView(View):
+class RealizaPixView(LoginRequiredMixin, View):
     def get(self, request, usuario_id):
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-
         usuario = Usuario.objects.get(pk=usuario_id)
 
         context = {
@@ -462,9 +436,6 @@ class RealizaPixView(View):
         return render(request, 'realiza.html', context)
     
     def post(self, request, usuario_id):
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        
         usuario = Usuario.objects.get(pk=usuario_id)
 
         context = {
