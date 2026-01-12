@@ -1,8 +1,6 @@
 # Banco do Django
 
 ## Descrição
-Essa aplicação simples feita em Django, tem o intuito
-
 Este projeto tem apenas o intuito de ser um estudo para meu aprimoramento no Django.
 
 ## Como instalar
@@ -10,10 +8,10 @@ Caso deseje instalar a aplicação, antes é necessário possuir instalados em s
 * <a href="https://www.python.org/downloads/">Python 3.12 ou superior</a>
 * <a href="https://www.postgresql.org/download/">PostgresSQL</a>
 
-### 1) Clone o repositório e entre no diretório Fusion
+### 1) Clone o repositório e entre no diretório Banco_do_Django
 ```sh
 git clone https://github.com/david-pessoa/Banco_do_Django.git
-cd Fusion
+cd Banco_do_Django
 ```
 
 ### 2) Crie um ambiente virtual e ative-o
